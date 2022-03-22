@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'login_form_title'                                => 'sign in to your account',
+    'login_form_identifier'                           => 'email address / username',
+    'login_form_password'                             => 'password',
+    'login_form_submit'                               => 'Sign in',
+    'dashboard_title'                                 => 'Dashboard',
+    'quarantine_status_normal'                        => 'normal',
+    'quarantine_status_outdoor'                       => 'outdoor',
+    'quarantine_status_unpaired'                      => 'bracelet unpaired',
+    'quarantine_status_offline'                       => 'offline',
+    'quarantine_violations_count'                     => 'violations count',
+    'quarantine_modal_label'                          => 'quarantine details',
+    'quarantine_modal_name'                           => 'name',
+    'quarantine_modal_bracelet_ID'                    => 'bracelet ID',
+    'quarantine_modal_start_date'                     => 'start date',
+    'quarantine_modal_remaining_quarantine_days'      => 'remaining quarantine days',
+    'quarantine_modal_status'                         => 'status',
+    'quarantine_modal_violations_count'               => 'violations count',
+    'quarantine_modal_email'                          => 'email',
+    'quarantine_modal_home_address'                   => 'home address',
+    'quarantine_modal_birth_date'                     => 'birth date',
+    'quarantine_modal_phone_number'                   => 'phone number',
+    'search_placeholder'                              => 'search for quarantines details, users',
+    'quarantines_table_user'                          => 'User',
+    'quarantines_table_bracelet_ID'                   => 'Bracelet ID',
+    'quarantines_table_start_date'                    => 'Start Date',
+    'quarantines_table_remaining_quarantine_days'     => 'Remaining Quarantine Days',
+    'quarantines_table_actions'                       => 'Actions',
+    'notifications_title'                             => 'Activites & notifications',
+];
+
