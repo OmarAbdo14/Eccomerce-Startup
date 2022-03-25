@@ -26,7 +26,7 @@ class UpdateAdminRequest extends FormRequest
     {
         return [
             'full_name' => [ 'required', 'string' ],
-            'username' => [ 'required', 'string', Rule::unique('admins', 'username')->ignore($this->id, 'id'), ],
+            'username' => "required|string|unique:admins,username,$this->id",
             'permissions' => [ 'required', ],
             // 'password' => [ 'nullable', 'string'],
             'email' => [ 'nullable', 'email', Rule::unique('admins', 'email')->ignore($this->id, 'id'), ],
@@ -40,14 +40,14 @@ class UpdateAdminRequest extends FormRequest
         return [
             'email.required'=> 'Field is required',
             'email.email'=> 'Field must be an email',
-            'email.unique'=> 'This email is exist',
+            'email.unique'=> "Field must be unique $this->id",
 
             'full_name.required'=> 'Field is required',
             'full_name.string'=> 'Field must be string',
 
             'username.required'=> 'Field is required',
             'username.string'=> 'Field must be string',
-            'username.unique'=> 'This username is exist',
+            'username.unique'=> "Field must be unique $this->id",
 
             'permissions.required'=> 'Field is required',
 

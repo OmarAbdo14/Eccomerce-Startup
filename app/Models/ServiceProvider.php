@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Admin\ProductType;
+use App\Models\ServiceProvider\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -42,9 +44,8 @@ class ServiceProvider extends Model
     ];
 
     public function products() {
-        return $this->hasMany('', 'servicepr');
+        return $this->hasMany(Product::class, 'service_provider_id');
     }
-
 
     // Rest omitted for brevity
 

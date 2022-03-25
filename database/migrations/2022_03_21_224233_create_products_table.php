@@ -19,11 +19,13 @@ class CreateProductsTable extends Migration
                 ->constrained('service_providers')
                 ->onDelete('cascade');
             $table->foreignId('product_type_id')
+                ->nullable()
                 ->constrained('product_types')
-                ->onDelete('set null');
+                ->nullOnDelete();
             $table->foreignId('category_id')
+                ->nullable()
                 ->constrained('categories')
-                ->onDelete('set null');
+                ->nullOnDelete();
             $table->string('title');
             $table->string('desc');
             $table->decimal('price', 8,2);

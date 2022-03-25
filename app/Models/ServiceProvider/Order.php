@@ -21,7 +21,11 @@ class Order extends Model
         'updated_at',
     ];
 
-    public function serviceProvider() {
-        return $this->belongsTo(ServiceProvider::class, 'service_provider_id');
+    public function users() {
+        return $this->belongsToMany(Order::class, 'user_orders');
+    }
+
+    public function order_item() {
+        return $this->hasMany(Order::class, 'order_id');
     }
 }

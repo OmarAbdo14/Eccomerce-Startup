@@ -5,6 +5,7 @@ namespace App\Http\Controllers\APIs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\service_providers\UpdateServiceProviderRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Models\ServiceProvider;
@@ -44,20 +45,30 @@ class ServiceProvidersController extends Controller
 
     public function updateServiceProvider(UpdateServiceProviderRequest $request, $id)
     {
+        $request->validated();
+
+        $password = bcrypt($request->password);
+
         //Get ServiceProvider
         $serviceProvider = ServiceProvider::find($id);
         if (!$serviceProvider)
             return $this->returnError('This ServiceProvider is not exist anymore', 'S004');
 
+        if($request->hasFile('image')) {
+            $imgPath = $this->saveFile($request->image, 'public/images/service_providers');
+        } else {
+            $imgPath = null;
+        }
         //update user
-        ServiceProvider::where('id', $id)->update([
-            'name' => $request->name,
+        $serviceProvider->update([
+            'full_name' => $request->full_name,
             'username' => $request->username,
             'email' => $request->email,
-            'ID_type' => $request->ID_type,
-            'formal_ID' => $request->formal_ID,
-            'phone' => json_encode($request->phone),
-//            'responsible' => boolval($request->responsible),
+            'password' => $password,
+            'phone' => $request->phone,
+            'organization_name' => $request->organization_name,
+            'organization_location' => $request->organization_location,
+            'image' => $imgPath,
         ]);
 
         if ($request->exists('geofences'))
@@ -76,9 +87,9 @@ class ServiceProvidersController extends Controller
 
         $deleted = $serviceProvider->delete();
         if ($deleted)
-            return $this->returnSuccessMessage('ServiceProvider No. ' . "$id" . ' has been deleted successfully');
+            return $this->returnSuccessMessage('Service Provider No. ' . "$id" . ' has been deleted successfully');
         else
-            return $this->returnError('This ServiceProvider can\'t be deleted', 'S003');
+            return $this->returnError('This Service Provider can\'t be deleted', 'S003');
     }
 
     /**

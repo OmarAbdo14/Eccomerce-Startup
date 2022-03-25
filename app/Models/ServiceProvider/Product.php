@@ -2,6 +2,8 @@
 
 namespace App\Models\ServiceProvider;
 
+use App\Models\Admin\Category;
+use App\Models\Admin\ProductType;
 use App\Models\ServiceProvider;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

@@ -30,6 +30,7 @@ use App\Http\Controllers\APIs\Admin\NotificationsController;
 Route::group( ['prefix'=>'auth'] , function ($router) {
     Route::post('/admin-login', [AdminsController::class, 'login']);
     Route::post('/user-login', [UsersController::class, 'login']);
+    Route::post('/service-provider-login', [UsersController::class, 'login']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('me', [AuthController::class, 'me']);
@@ -37,10 +38,10 @@ Route::group( ['prefix'=>'auth'] , function ($router) {
     Route::post('/send-notification', [NotificationsController::class, 'sendNotificationToMobile']);
 
     Route::group(['prefix'=>'admin', 'middleware'=>'auth.guard:admin-api'], function() {
+        Route::post('/register', [AdminsController::class, 'register']);
         Route::get('/all', [AdminsController::class, 'getAllAdmins']);
         Route::get('/get-admin/{id}', [AdminsController::class, 'getAdmin']);
-        Route::post('/register', [AdminsController::class, 'register']);
-        Route::post('/update/{id}', [AdminsController::class, 'updateAdmin']);
+        Route::put('/update/{id}', [AdminsController::class, 'updateAdmin']);
         Route::delete('/delete/{id}', [AdminsController::class, 'deleteAdmin']);
 
         Route::group(['prefix'=> 'notifications'], function () {
@@ -69,6 +70,8 @@ Route::group( ['prefix'=>'auth'] , function ($router) {
         Route::post('/add', [UsersController::class, 'storeUser']);
         Route::put('/update/{id}', [UsersController::class, 'updateUser']);
         Route::delete('/delete/{id}', [UsersController::class, 'deleteUser']);
+
+
     });
 
 });

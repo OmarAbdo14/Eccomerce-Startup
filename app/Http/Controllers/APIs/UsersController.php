@@ -11,10 +11,10 @@ use App\Http\Traits\GeneralTrait;
 use App\Models\ServiceProvider\Order;
 use App\Models\ServiceProvider\OrderItem;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\User\UserOrder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 
 class UsersController extends Controller
@@ -25,11 +25,11 @@ class UsersController extends Controller
     public function getAllUsers()
     {
         $users = User::all()->map(function ($user, $key) {
-
+            $user->orders;
             return $user;
         });
         if (count($users) >= 1) {
-            return $this->returnData('$users', $users, 'All users has been returned successfully');
+            return $this->returnData('users', $users, 'All users has been returned successfully');
         } else {
             return $this->returnError('There is not any user', 'S004');
         }
@@ -39,6 +39,7 @@ class UsersController extends Controller
     {
         $user = User::find($request->id);
         if ($user) {
+            $user->orders;
 
             return $this->returnData('user', $user, 'User has been returned successfully');
         } else {
@@ -48,20 +49,33 @@ class UsersController extends Controller
 
     public function updateUser(UpdateUserRequest $request, $id)
     {
+        $request->validated();
+
         //Get User
         $user = User::find($id);
         if (!$user)
             return $this->returnError('This User is not exist anymore', 'S004');
 
+        if($request->hasFile('image')) {
+            $imgPath = $this->saveFile($request->image, 'public/images/users');
+        } else {
+            $imgPath = null;
+        }
+
         //update user
         User::where('id', $id)->update([
-            'name' => $request->name,
+            'full_name' => $request->full_name,
             'username' => $request->username,
             'email' => $request->email,
-            'ID_type' => $request->ID_type,
-            'formal_ID' => $request->formal_ID,
-            'phone' => json_encode($request->phone),
-//            'responsible' => boolval($request->responsible),
+            'password' => $request->password,
+            'firebase_token' => $request->firebase_token,
+            'phone' => $request->phone,
+            'location_country' => $request->location_country,
+            'location_city' => $request->location_city,
+            'location_area' => $request->location_area,
+            'birth_date' => $request->birth_date,
+            'gender' => $request->gender,
+            'image' => $imgPath,
         ]);
 
         if ($request->exists('geofences'))
@@ -183,18 +197,26 @@ class UsersController extends Controller
             ];
             $createdOrder = Order::create($newOrderArray);
             $order_id = $createdOrder->id;
+            // get the authenticated user
+            $user = Auth::user();
+            $user_order = UserOrder::create([
+                'user_id'=>$user->id,
+                'order_id'=> $order_id,
+            ]);
 
             foreach ($cart->items as $cart_item) {
                 $item_id = $cart_item['data']['id'];
+//                $item_data = json_encode($cart_item['data']);
                 $item_name = $cart_item['data']['name'];
                 $item_price = $cart_item['data']['price'];
-                $newItemsInCurrentOrers = [
+                $newItemsInCurrentOrders = [
                     'item_id'=>$item_id,
+//                    'item_data'=>$item_data,
                     'order_id'=>$order_id,
                     'item_name'=>$item_name,
                     'item_price'=>$item_price,
                 ];
-                $created_order_items = OrderItem::create($newItemsInCurrentOrers);
+                $created_order_items = OrderItem::create($newItemsInCurrentOrders);
             }
 
             // delete cart
@@ -206,7 +228,7 @@ class UsersController extends Controller
 
             return $this->returnSuccessMessage('order has been created successfully');
         } else {
-            return $this->returnError('cart is empty', 'S004');
+            return $this->returnError('order is empty', 'S004');
         }
     }
 

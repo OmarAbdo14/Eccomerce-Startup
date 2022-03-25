@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Admin\Geofence;
+use App\Models\ServiceProvider\Order;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -27,7 +28,9 @@ class User extends Authenticatable implements JWTSubject
         'updated_at',
     ];
 
-
+    public function orders() {
+        return $this->belongsToMany(Order::class, 'user_orders');
+    }
 
 
     /**

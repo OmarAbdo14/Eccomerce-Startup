@@ -29,7 +29,7 @@ class RegisterRequest extends FormRequest
             'username' => [ 'required', 'string',  Rule::unique('admins', 'username'), ],
             'permissions' => [ 'required', ],
             'email' => [ 'required', 'email', Rule::unique('admins', 'email'), ],
-            'image' => [ 'nullable', ],
+            'image' => [ 'nullable', 'image'],
         ];
     }
 
@@ -50,7 +50,7 @@ class RegisterRequest extends FormRequest
 
             'permissions.required'=> 'Field is required',
 
-//            'image.image'               =>'Choose a correct file according to image extensions',
+            'image.image'               =>'Choose a correct file according to image extensions',
         ];
     }
 }

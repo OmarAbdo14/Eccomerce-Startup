@@ -19,11 +19,10 @@ class AdminsController extends Controller
     use GeneralTrait;
 
     public function getAllAdmins() {
-        $totalAdminsNo = 0;
-        $admins = Admin::all();
-        foreach ($admins as $admin) {
+        $admins = Admin::all()->map(function ($admin) {
             $admin->permissions = json_decode($admin->permissions);
-        }
+            return $admin;
+        });
 
         if (count($admins) !=0) {
             return $this-> returnData('admins', $admins, 'All admins has been returned successfully');
@@ -44,7 +43,7 @@ class AdminsController extends Controller
     }
 
     public function updateAdmin(UpdateAdminRequest $request, $id) {
-//        $request->validated();
+        $request->validated();
 
         //Get Admin
         $admin = Admin::find($id);
@@ -115,7 +114,7 @@ class AdminsController extends Controller
                 'full_name' => $request->full_name,
                 'username' => $request->username,
                 'email' => $request->email,
-                'permissions' => json_encode(array($request->permissions)),
+                'permissions' => json_encode($request->permissions),
                 'image' => $imgPath,
                 'password' => $password,
             ]);
