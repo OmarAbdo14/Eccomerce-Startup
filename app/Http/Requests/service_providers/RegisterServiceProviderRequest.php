@@ -5,7 +5,7 @@ namespace App\Http\Requests\service_providers;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateServiceProviderRequest extends FormRequest
+class RegisterServiceProviderRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,8 +26,8 @@ class UpdateServiceProviderRequest extends FormRequest
     {
         return [
             'full_name' => [ 'required', 'string' ],
-            'username' => [ 'required', 'string',  Rule::unique('service_providers', 'username')->ignore($this->id, 'id'), ],
-            'email' => [ 'required', 'email', Rule::unique('service_providers', 'email')->ignore($this->id, 'id'), ],
+            'username' => [ 'required', 'string',  Rule::unique('service_providers', 'username'), ],
+            'email' => [ 'required', 'email', Rule::unique('service_providers', 'email'), ],
             'password' => [ 'required', 'string', 'min:8'],
             'phone' => [ 'required', 'digits:11', ],
             'organization_name' => [ 'required', 'string' ],

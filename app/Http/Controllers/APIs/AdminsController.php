@@ -4,7 +4,7 @@ namespace App\Http\Controllers\APIs;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\admins\RegisterAdminRequest;
 use App\Http\Requests\admins\UpdateAdminRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
@@ -98,7 +98,7 @@ class AdminsController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(RegisterRequest $request) {
+    public function register(RegisterAdminRequest $request) {
         $request->validated();
 
         $password = $this->passwordGenerator(new Admin, 'password', 8, 'Admin');

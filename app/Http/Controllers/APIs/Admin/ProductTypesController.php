@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\APIs\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\admins\product_types\CreateUpdateProductTypeRequest;
+use App\Http\Requests\service_providers\products\CreateProductRequest;
+use App\Http\Requests\service_providers\products\UpdateProductRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Models\Admin\ProductType;
@@ -26,7 +27,7 @@ class ProductTypesController extends Controller
         }
     }
 
-    public function getProductTypeById(Request $request) {
+    public function getProductType(Request $request) {
         $product_type = ProductType::find($request->id);
         if($product_type) {
             $product_type->products;
@@ -36,7 +37,7 @@ class ProductTypesController extends Controller
         }
     }
 
-    public function addProductType(CreateUpdateProductTypeRequest $request) {
+    public function addProductType(CreateProductRequest $request) {
         $request->validated();
 
         //Upload Image
@@ -58,26 +59,30 @@ class ProductTypesController extends Controller
         }
     }
 
-    public function updateProductType(CreateUpdateProductTypeRequest $request) {
+    public function updateProductType(UpdateProductRequest $request) {
         $request->validated();
 
-        //Upload Image
-        if($request->hasFile('image')) {
-            $imgPath = $this->saveFile($request->image, 'public/images/product_types');
-        } else {
-            $imgPath = null;
-        }
-
-        $product_type = ProductType::update([
-            'title'=> $request->title,
-            'image'=> $imgPath,
-        ]);
-
+        $product_type = ProductType::find($request->id);
         if($product_type) {
-            return $this->returnSuccessMessage('product type has been updated successfully');
-        } else {
-            return $this->returnError('product type can\'t be updated', 'S002');
+            //Upload Image
+            if($request->hasFile('image')) {
+                $imgPath = $this->saveFile($request->image, 'public/images/product_types');
+            } else {
+                $imgPath = null;
+            }
+
+            $product_type->update([
+                'title'=> $request->title,
+                'image'=> $imgPath,
+            ]);
+
+            if($product_type) {
+                return $this->returnSuccessMessage('product type has been updated successfully');
+            } else {
+                return $this->returnError('product type can\'t be updated', 'S002');
+            }
         }
+        return $this->returnError('This product type doesn\'t exist anymore', 'S003');
     }
 
     public function deleteProductType($id)

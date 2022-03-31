@@ -28,7 +28,7 @@ class CreateUsersTable extends Migration
             $table->string('location_area');
             $table->date('birth_date');
             $table->enum('gender', ['male', 'female']);
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

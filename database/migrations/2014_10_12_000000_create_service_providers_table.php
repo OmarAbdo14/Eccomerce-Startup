@@ -25,7 +25,7 @@ class CreateServiceProvidersTable extends Migration
             $table->string('phone');
             $table->string('organization_name');
             $table->string('organization_location');
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }

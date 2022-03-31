@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\APIs\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\admins\categories\CreateUpdateCategoryRequest;
+use App\Http\Requests\admins\categories\CreateCategoryRequest;
+use App\Http\Requests\admins\categories\UpdateCategoryRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Models\Admin\Category;
@@ -26,7 +27,7 @@ class CategoriesController extends Controller
         }
     }
 
-    public function getCategoryById(Request $request) {
+    public function getCategory(Request $request) {
         $category = Category::find($request->id);
         if($category) {
             $category->products;
@@ -37,7 +38,7 @@ class CategoriesController extends Controller
         }
     }
 
-    public function addCategory(CreateUpdateCategoryRequest $request) {
+    public function addCategory(CreateCategoryRequest $request) {
         $request->validated();
 
         //Upload Image
@@ -59,25 +60,29 @@ class CategoriesController extends Controller
         }
     }
 
-    public function updateCategory(CreateUpdateCategoryRequest $request) {
+    public function updateCategory(UpdateCategoryRequest $request) {
         $request->validated();
-
-        //Upload Image
-        if($request->hasFile('image')) {
-            $imgPath = $this->saveFile($request->image, 'public/images/categories');
-        } else {
-            $imgPath = null;
-        }
-
-        $category = Category::update([
-            'title'=> $request->title,
-            'image'=> $imgPath,
-        ]);
-
+        $category = Category::find($request->id);
         if($category) {
-            return $this->returnSuccessMessage('category has been updated successfully');
+            //Upload Image
+            if($request->hasFile('image')) {
+                $imgPath = $this->saveFile($request->image, 'public/images/categories');
+            } else {
+                $imgPath = null;
+            }
+
+            $category->update([
+                'title'=> $request->title,
+                'image'=> $imgPath,
+            ]);
+
+            if($category) {
+                return $this->returnSuccessMessage('category has been updated successfully');
+            } else {
+                return $this->returnError('category can\'t be updated', 'S002');
+            }
         } else {
-            return $this->returnError('category can\'t be updated', 'S002');
+            return $this->returnError('This category doesn\'t exist anymore', 'S003');
         }
     }
 

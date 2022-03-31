@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Http\Requests\service_providers;
+namespace App\Http\Requests\users;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Enum;
 
-class UpdateServiceProviderRequest extends FormRequest
+class RegisterUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,12 +28,15 @@ class UpdateServiceProviderRequest extends FormRequest
     {
         return [
             'full_name' => [ 'required', 'string' ],
-            'username' => [ 'required', 'string',  Rule::unique('service_providers', 'username')->ignore($this->id, 'id'), ],
-            'email' => [ 'required', 'email', Rule::unique('service_providers', 'email')->ignore($this->id, 'id'), ],
+            'username' => [ 'required', 'string',  Rule::unique('users', 'username'), ],
+            'email' => [ 'required', 'email', Rule::unique('users', 'email'), ],
             'password' => [ 'required', 'string', 'min:8'],
             'phone' => [ 'required', 'digits:11', ],
-            'organization_name' => [ 'required', 'string' ],
-            'organization_location' => [ 'required', 'string' ],
+            'location_country' => [ 'required', 'string' ],
+            'location_city' => [ 'required', 'string' ],
+            'location_area' => [ 'required', 'string', ],
+            'birth_date' => [ 'required', 'date', ],
+            'gender' => [ 'required', 'string' ],
             'image' => [ 'nullable', 'image'],
         ];
     }
@@ -58,11 +63,20 @@ class UpdateServiceProviderRequest extends FormRequest
             'phone.required'=> 'Field is required',
             'phone.digits'=> 'Field must be 11 digits',
 
-            'organization_name.required'=> 'Field is required',
-            'organization_name.string'=> 'Field must be string',
+            'location_country.required'=> 'Field is required',
+            'location_country.string'=> 'Field must be string',
 
-            'organization_location.required'=> 'Field is required',
-            'organization_location.string'=> 'Field must be string',
+            'location_city.required'=> 'Field is required',
+            'location_city.string'=> 'Field must be string',
+
+            'location_area.required'=> 'Field is required',
+            'location_area.string'=> 'Field must be string',
+
+            'birth_date.required'=> 'Field is required',
+            'birth_date.date'=> 'Field must be date',
+
+            'gender.required'=> 'Field is required',
+            'gender.string'=> 'Field must be string',
 
             'image.image'               =>'Choose a correct file according to image extensions',
         ];

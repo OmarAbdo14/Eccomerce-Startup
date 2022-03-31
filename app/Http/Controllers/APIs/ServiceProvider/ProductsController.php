@@ -4,7 +4,7 @@ namespace App\Http\Controllers\APIs\ServiceProvider;
 
 use App\Cart;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\service_providers\products\CreateUpdateProductRequest;
+use App\Http\Requests\service_providers\products\CreateProductRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Models\ServiceProvider\Product;
@@ -29,7 +29,7 @@ class ProductsController extends Controller
         }
     }
 
-    public function getProductById(Request $request) {
+    public function getProduct(Request $request) {
         $product = Product::find($request->id);
         if($product) {
             $product->serviceProvider;
@@ -42,7 +42,7 @@ class ProductsController extends Controller
         }
     }
 
-    public function addProduct(CreateUpdateProductRequest $request) {
+    public function addProduct(CreateProductRequest $request) {
         $request->validated();
 
         //Upload Image
@@ -73,7 +73,7 @@ class ProductsController extends Controller
         }
     }
 
-    public function updateProduct(CreateUpdateProductRequest $request) {
+    public function updateProduct(CreateProductRequest $request) {
         $request->validated();
 
         //Upload Image

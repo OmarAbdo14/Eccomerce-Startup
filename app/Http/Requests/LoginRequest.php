@@ -25,8 +25,8 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'identifier' => [ 'required', ],
-            'password' => [ 'required'],
+            'identifier' => [ 'required', 'string'],
+            'password' => [ 'required', 'string'],
         ];
     }
 
@@ -35,7 +35,9 @@ class LoginRequest extends FormRequest
     {
         return [
             'identifier.required'=> 'Field is required',
+            'identifier.string'=> 'Field must be string',
             'password.required'=> 'Field is required',
+            'password.string'=> 'Field must be string',
 
 //            'image.image'               =>'Choose a correct file according to image extensions',
         ];

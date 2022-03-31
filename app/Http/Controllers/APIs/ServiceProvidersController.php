@@ -4,7 +4,7 @@ namespace App\Http\Controllers\APIs;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\service_providers\RegisterServiceProviderRequest;
 use App\Http\Requests\service_providers\UpdateServiceProviderRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
@@ -98,7 +98,7 @@ class ServiceProvidersController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(RegisterRequest $request) {
+    public function register(RegisterServiceProviderRequest $request) {
         $request->validated();
 
         $password = bcrypt($request->password);
@@ -136,42 +136,35 @@ class ServiceProvidersController extends Controller
     public function login(LoginRequest $request) {
         try {
             $request->validated();
-//            $validator = Validator::make($request->all(), $rules, $messages);
-//            if($validator->fails()) {
-//                return $this-> returnError('username, password and firebase token are required', 'S003');
-//            }
 
             // $serviceProvider = Auth::guard('user-api')->user();
-            $serviceProvider = ServiceProvider::where('username', '=', $request->username)->first();
-            $serviceProvider->products;
+            $serviceProvider = ServiceProvider::where('username', '=', $request->identifier)->orWhere('email', '=', $request->identifier)->first();
 
-            $password = $request->password;
-            // $password = bcrypt($request->password);
-            // check password
-            // if(!Hash::check($password, $serviceProvider->password)) {
             if(!$serviceProvider) {
                 return $this->returnError('Email/Username is incorrect', 'S001');
-            } else if($password !== $serviceProvider->password) {
+            } else if(password_verify($request->password, $serviceProvider->password)) {
+                $serviceProvider->products;
+
+                // update user firebase token
+                if($request->firebase_token) {
+                    $serviceProvider->update([
+                        'firebase_token'=> $request->firebase_token,
+                    ]);
+                }
+
+    //             $credentials = $request->only(['email', 'password']);
+    //             $token = Auth::guard('user-api')->attempt($credentials);
+                $token = JWTAuth::fromUser($serviceProvider);
+                if (!$token) {
+                    return $this->returnError('Unauthorized', 'E3001');
+                }
+                $serviceProvider->token = $token;
+
+                return $this->returnData('service_provider', $serviceProvider, 'returned token');
+
+            } else {
                 return $this->returnError('password doesn\'t match', 'S002');
             }
-
-
-            // update user firebase token
-            if($request->firebase_token) {
-                $serviceProvider->update([
-                    'firebase_token'=> $request->firebase_token,
-                ]);
-            }
-
-//             $credentials = $request->only(['email', 'password']);
-//             $token = Auth::guard('user-api')->attempt($credentials);
-            $token = JWTAuth::fromServiceProvider($serviceProvider);
-            if (!$token) {
-                return $this->returnError('Unauthorized', 'E3001');
-            }
-
-            return $this->returnData('service_provider', $serviceProvider, 'returned token');
-
         } catch (\Exception $e) {
             return $this->returnError($e->getMessage(), $e->getCode() );
         }

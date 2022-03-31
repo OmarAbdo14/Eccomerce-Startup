@@ -5,7 +5,7 @@ namespace App\Http\Requests\service_providers\products;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CreateUpdateProductRequest extends FormRequest
+class CreateProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,7 +31,7 @@ class CreateUpdateProductRequest extends FormRequest
             'offer_percent'           =>[ 'required', 'digits_between:0,100' ],
             'is_shipping'             =>[ 'required', 'boolean' ],
             'rate'                    =>[ 'required', 'digits' ],
-            'tags'                    =>[ 'required', 'array' ],
+            'tags'                    =>[ 'required', ],
             'service_provider_id'     =>[ 'required', 'integer' ],
             'product_type_id'         =>[ 'required', 'integer' ],
             'category_id'             =>[ 'required', 'integer' ],

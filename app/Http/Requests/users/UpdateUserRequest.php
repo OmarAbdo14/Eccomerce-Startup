@@ -25,50 +25,58 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'                   =>[ 'required', 'string' ],
-            'username'               =>[ 'required', 'string', Rule::unique('users', 'username')->ignore($this->id, 'id'), ],
-            'email'                  =>[ 'nullable', 'email', Rule::unique('users', 'email')->ignore($this->id, 'id') ],
-//            'nationality'            =>[ 'required', 'string' ],
-            'formal_ID'              =>[ 'required', 'string', Rule::unique('users', 'formal_ID')->ignore($this->id, 'id'), ],
-//            'home_address'           =>[ 'required', 'string' ],
-//            'birth_date'             =>[ 'required', 'date' ],
-            'geofences'              =>[ 'nullable', ],
-            'phone'                  =>[ 'required', ],
-            'image'                  =>[ 'nullable', ],
+            'full_name' => [ 'required', 'string' ],
+            'username' => [ 'required', 'string',  Rule::unique('users', 'username')->ignore($this->id, 'id'), ],
+            'email' => [ 'required', 'email', Rule::unique('users', 'email')->ignore($this->id, 'id'), ],
+            'password' => [ 'required', 'string', 'min:8'],
+            'phone' => [ 'required', 'digits:11', ],
+            'location_country' => [ 'required', 'string' ],
+            'location_city' => [ 'required', 'string' ],
+            'location_area' => [ 'required', 'string', ],
+            'birth_date' => [ 'required', 'date', ],
+            'gender' => [ 'required', 'string' ],
+            'image' => [ 'nullable', 'image'],
         ];
     }
 
 
     public function messages()
     {
-
         return [
-            'name.required'             =>'Field is required',
-            'name.string'               =>'Field must be string',
+            'email.required'=> 'Field is required',
+            'email.email'=> 'Field must be an email',
+            'email.unique'=> 'This email is exist',
 
-            'username.required'         =>'Field is required',
-            'username.string'           =>'Field must be string',
-            'username.unique'           =>'This username is exist',
+            'full_name.required'=> 'Field is required',
+            'full_name.string'=> 'Field must be string',
 
-            'email.string'              =>'Field must be an email',
-            'email.unique'              =>'This email is exist',
+            'username.required'=> 'Field is required',
+            'username.string'=> 'Field must be string',
+            'username.unique'=> 'This username is exist',
 
-//            'nationality'               =>'Choose one from the previous options',
+            'password.required'=> 'Field is required',
+            'password.string'=> 'Field must be string',
+            'password.min'=> 'Field must be at 8 character least',
 
-            'formal_ID.required'        =>'Field is required',
-            'formal_ID.string'          =>'Field must be string',
-            'formal_ID.unique'          =>'This ID is exist',
+            'phone.required'=> 'Field is required',
+            'phone.digits'=> 'Field must be 11 digits',
 
-//            'home_address.required'     =>'Field is required',
-//            'home_address.string'       =>'Field must be string',
-//
-//            'birth_date.required'       =>'Field is required',
-//            'birth_date.string'         =>'Field must be date',
+            'location_country.required'=> 'Field is required',
+            'location_country.string'=> 'Field must be string',
 
-            'phone.required'            =>'Field is required',
+            'location_city.required'=> 'Field is required',
+            'location_city.string'=> 'Field must be string',
 
-//            'image.image'               =>'Choose a correct file according to this extensions()',
+            'location_area.required'=> 'Field is required',
+            'location_area.string'=> 'Field must be string',
 
+            'birth_date.required'=> 'Field is required',
+            'birth_date.date'=> 'Field must be date',
+
+            'gender.required'=> 'Field is required',
+            'gender.string'=> 'Field must be string',
+
+            'image.image'               =>'Choose a correct file according to image extensions',
         ];
     }
 }

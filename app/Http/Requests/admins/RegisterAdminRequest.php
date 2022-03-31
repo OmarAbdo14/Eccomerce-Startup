@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\admins;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RegisterRequest extends FormRequest
+class RegisterAdminRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

@@ -29,29 +29,28 @@ class UpdateAdminRequest extends FormRequest
             'username' => "required|string|unique:admins,username,$this->id",
             'permissions' => [ 'required', ],
             // 'password' => [ 'nullable', 'string'],
-            'email' => [ 'nullable', 'email', Rule::unique('admins', 'email')->ignore($this->id, 'id'), ],
-            'image' => [ 'nullable', ],
+            'email' => [ 'required', 'email', Rule::unique('admins', 'email')->ignore($this->id, 'id'), ],
+            'image' => [ 'nullable', 'image', ],
         ];
     }
-
 
     public function messages()
     {
         return [
             'email.required'=> 'Field is required',
             'email.email'=> 'Field must be an email',
-            'email.unique'=> "Field must be unique $this->id",
+            'email.unique'=> 'This email is exist',
 
             'full_name.required'=> 'Field is required',
             'full_name.string'=> 'Field must be string',
 
             'username.required'=> 'Field is required',
             'username.string'=> 'Field must be string',
-            'username.unique'=> "Field must be unique $this->id",
+            'username.unique'=> 'This username is exist',
 
             'permissions.required'=> 'Field is required',
 
-//            'image.image'               =>'Choose a correct file according to image extensions',
+            'image.image'               =>'Choose a correct file according to image extensions',
         ];
     }
 }

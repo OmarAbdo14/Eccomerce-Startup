@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\admins\categories;
+namespace App\Http\Requests\admins\product_types;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class CreateUpdateCategoryRequest extends FormRequest
+class CreateProductTypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class CreateUpdateCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'title'                   =>[ 'required', 'string' ],
+            'title'                   =>[ 'required', 'string', Rule::unique('product_types', 'title') ],
             'image'                   =>[ 'required', 'image' ],
         ];
     }
@@ -37,6 +37,7 @@ class CreateUpdateCategoryRequest extends FormRequest
         return [
             'title.required'                    =>'Field is required',
             'title.string'                      =>'Field must be string',
+            'title.unique'                      =>'Field must be unique',
 
             'image.required'                    =>'Field is required',
             'image.image'                       =>'Image must be uploaded',

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\APIs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\users\UpdateUserRequest;
 use App\Http\Requests\LoginRequest;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\users\RegisterUserRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
 use App\Models\ServiceProvider\Order;
@@ -99,7 +99,7 @@ class UsersController extends Controller
             return $this->returnError('This User can\'t be deleted', 'S003');
     }
 
-    public function register(RegisterRequest $request) {
+    public function register(RegisterUserRequest $request) {
         $request->validated();
 
         $password = bcrypt($request->password);
@@ -142,35 +142,29 @@ class UsersController extends Controller
             $request->validated();
 
             // $user = Auth::guard('user-api')->user();
-            $user = User::where('username', '=', $request->username)->first();
+            $user = User::where('username', '=', $request->identifier)->orWhere('email', '=', $request->identifier)->first();
 
-
-            $password = $request->password;
-            // $password = bcrypt($request->password);
-            // check password
-            // if(!Hash::check($password, $user->password)) {
             if(!$user) {
                 return $this->returnError('Email/Username is incorrect', 'S001');
-            } else if($password !== $user->password) {
+
+            } else if(password_verify($request->password, $user->password)) { // check password
+                // update user firebase token
+                if($request->firebase_token) {
+                    $user->update([
+                        'firebase_token'=> $request->firebase_token,
+                    ]);
+                }
+
+                $token = JWTAuth::fromUser($user);
+                if (!$token) {
+                    return $this->returnError('Unauthorized', 'E3001');
+                }
+                $user->token = $token;
+
+                return $this->returnData('data', $user, 'returned token');
+            } else {
                 return $this->returnError('password doesn\'t match', 'S002');
             }
-
-            // update user firebase token
-            if($request->firebase_token) {
-                $user->update([
-                    'firebase_token'=> $request->firebase_token,
-                ]);
-            }
-
-//             $credentials = $request->only(['email', 'password']);
-//             $token = Auth::guard('user-api')->attempt($credentials);
-            $token = JWTAuth::fromUser($user);
-            if (!$token) {
-                return $this->returnError('Unauthorized', 'E3001');
-            }
-
-            return $this->returnData('data', $user, 'returned token');
-
         } catch (\Exception $e) {
             return $this->returnError($e->getMessage(), $e->getCode() );
         }
