@@ -37,7 +37,7 @@ class ProductTypesController extends Controller
         }
     }
 
-    public function addProductType(CreateProductRequest $request) {
+    public function addProductType(CreateProductTypeRequest $request) {
         $request->validated();
 
         //Upload Image
@@ -59,7 +59,7 @@ class ProductTypesController extends Controller
         }
     }
 
-    public function updateProductType(UpdateProductRequest $request) {
+    public function updateProductType(UpdateProductTypeRequest $request) {
         $request->validated();
 
         $product_type = ProductType::find($request->id);

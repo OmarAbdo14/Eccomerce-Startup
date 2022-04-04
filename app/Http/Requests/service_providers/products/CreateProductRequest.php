@@ -27,11 +27,11 @@ class CreateProductRequest extends FormRequest
         return [
             'title'                   =>[ 'required', 'string' ],
             'desc'                    =>[ 'required', 'string' ],
-            'price'                   =>[ 'required', 'digits' ],
-            'offer_percent'           =>[ 'required', 'digits_between:0,100' ],
+            'price'                   =>[ 'required', 'numeric' ],
+            'offer_percent'           =>[ 'required', 'min:0', 'max:100' ],
+            'rate'                    =>[ 'required', 'min:0', 'max:5' ],
             'is_shipping'             =>[ 'required', 'boolean' ],
-            'rate'                    =>[ 'required', 'digits' ],
-            'tags'                    =>[ 'required', ],
+            'tags'                    =>[ 'nullable', ],
             'service_provider_id'     =>[ 'required', 'integer' ],
             'product_type_id'         =>[ 'required', 'integer' ],
             'category_id'             =>[ 'required', 'integer' ],
@@ -44,23 +44,28 @@ class CreateProductRequest extends FormRequest
     {
 
         return [
-            'title.required'                    =>'Field is required',
-            'title.string'                      =>'Field must be string',
+            'title.required'                    =>'title is required',
+            'title.string'                      =>'title must be string',
 
-            'desc.required'                     =>'Field is required',
-            'desc.string'                       =>'Field must be string',
+            'desc.required'                     =>'desc is required',
+            'desc.string'                       =>'desc must be string',
 
-            'price.required'                    =>'Field is required',
-            'price.digits'                      =>'Field must be digits',
+            'price.required'                    =>'price is required',
+            'price.numeric'                     =>'price must be numeric',
 
-            'offer_percent.required'            =>'Field is required',
-            'offer_percent.digits_between'      =>'Field must be digits between 0 and 100',
+            'offer_percent.required'            =>'offer_percent is required',
 
-            'is_shipping.required'              =>'Field is required',
-            'is_shipping.boolean'               =>'Field must be boolean',
+            'rate.required'            =>'rate is required',
 
-            'image.required'                    =>'Field is required',
-            'image.image'                       =>'Image must be uploaded',
+            'is_shipping.required'              =>'is_shipping is required',
+            'is_shipping.boolean'               =>'is_shipping must be boolean',
+
+            'service_provider_id.required'            =>'service_provider_id is required',
+            'product_type_id.required'            =>'product_type_id is required',
+            'category_id.required'            =>'category_id is required',
+
+            'image.required'                    =>'image is required',
+            'image.image'                       =>'image must be uploaded',
         ];
     }
 }

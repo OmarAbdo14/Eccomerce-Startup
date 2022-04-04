@@ -31,17 +31,8 @@ use App\Http\Controllers\APIs\Admin\NotificationsController;
 // });
 
 Route::group( ['prefix'=>'auth'] , function ($router) {
+
     Route::post('/admin-login', [AdminsController::class, 'login']);
-    Route::post('/user-login', [UsersController::class, 'login']);
-    Route::post('/service-provider-login', [ServiceProvidersController::class, 'login']);
-    Route::post('/service-provider/register', [ServiceProvidersController::class, 'register']);
-    Route::post('/user/register', [UsersController::class, 'register']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('me', [AuthController::class, 'me']);
-
-    Route::post('/send-notification', [NotificationsController::class, 'sendNotificationToMobile']);
-
     Route::group(['prefix'=>'admin', 'middleware'=>'auth.guard:admin-api'], function() {
         Route::post('/register', [AdminsController::class, 'register']);
         Route::get('/all', [AdminsController::class, 'getAllAdmins']);
@@ -77,6 +68,8 @@ Route::group( ['prefix'=>'auth'] , function ($router) {
         });
     });
 
+    Route::post('/service-provider-login', [ServiceProvidersController::class, 'login']);
+    Route::post('/service-provider/register', [ServiceProvidersController::class, 'register']);
     Route::group(['prefix'=>'service-provider', 'middleware'=>'auth.guard:service-provider-api'], function() {
         Route::get('/all', [ServiceProvidersController::class, 'getAllServiceProviders']);
         Route::get('/get-service-provider/{id}', [ServiceProvidersController::class, 'getServiceProvider']);
@@ -84,11 +77,17 @@ Route::group( ['prefix'=>'auth'] , function ($router) {
         Route::put('/update/{id}', [ServiceProvidersController::class, 'updateServiceProvider']);
         Route::delete('/delete/{id}', [ServiceProvidersController::class, 'deleteServiceProvider']);
         Route::group(['prefix'=>'products',], function() {
+            Route::get('/all', [ProductsController::class, 'getAllProducts']);
+            Route::get('/', [ProductsController::class, 'getCategoryProducts']);
+            Route::get('/get-product/{id}', [ProductsController::class, 'getProduct']);
             Route::post('/add', [ProductsController::class, 'addProduct']);
             Route::put('/update/{id}', [ProductsController::class, 'updateProduct']);
+            Route::delete('/delete/{id}', [ProductsController::class, 'deleteProduct']);
         });
     });
 
+    Route::post('/user-login', [UsersController::class, 'login']);
+    Route::post('/user/register', [UsersController::class, 'register']);
     Route::group(['prefix'=>'user', 'middleware'=>'auth.guard:user-api'], function() {
         Route::get('/all', [UsersController::class, 'getAllUsers']);
         Route::get('/get-user/{id}', [UsersController::class, 'getUser']);
@@ -98,9 +97,16 @@ Route::group( ['prefix'=>'auth'] , function ($router) {
 
         Route::group(['prefix'=>'products',], function() {
             Route::get('/all', [ProductsController::class, 'getAllProducts']);
+            Route::get('/', [ProductsController::class, 'getCategoryProducts']);
             Route::get('/get-product/{id}', [ProductsController::class, 'getProduct']);
         });
     });
+
+    Route::post('/send-notification', [NotificationsController::class, 'sendNotificationToMobile']);
+
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('me', [AuthController::class, 'me']);
 
 });
 

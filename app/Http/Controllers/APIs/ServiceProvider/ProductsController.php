@@ -5,8 +5,10 @@ namespace App\Http\Controllers\APIs\ServiceProvider;
 use App\Cart;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\service_providers\products\CreateProductRequest;
+use App\Http\Requests\service_providers\products\UpdateProductRequest;
 use App\Http\Traits\APIsTrait;
 use App\Http\Traits\GeneralTrait;
+use App\Models\Admin\Category;
 use App\Models\ServiceProvider\Product;
 use Illuminate\Http\Request;
 
@@ -26,6 +28,15 @@ class ProductsController extends Controller
             return $this->returnData('products', $products, 'All products have been returned successfully');
         } else {
             return $this->returnError('there is not any product', 'S004');
+        }
+    }
+
+    public function getCategoryProducts(Request $request) {
+        $category = Category::find($request->category_id);
+        if($category) {
+            return $this->returnData('products', $category->products, 'All products have been returned successfully');
+        } else {
+            return $this->returnError('this category does not exist', 'S004');
         }
     }
 
@@ -73,7 +84,7 @@ class ProductsController extends Controller
         }
     }
 
-    public function updateProduct(CreateProductRequest $request) {
+    public function updateProduct(UpdateProductRequest $request, $id) {
         $request->validated();
 
         //Upload Image
@@ -83,7 +94,8 @@ class ProductsController extends Controller
             $imgPath = null;
         }
 
-        $product = Product::update([
+        $product = Product::find($id);
+        $product->update([
             'title'=> $request->title,
             'desc'=> $request->desc,
             'price'=> $request->price,
