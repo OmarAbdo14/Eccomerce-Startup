@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const baseURL = 'http://wms.cardi-hu.com/api/auth';
+const baseURL = 'http://127.0.0.1:8000/api/auth';
 
 export const API = axios.create({
   baseURL: `${baseURL}`,

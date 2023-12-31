@@ -1,6 +1,4 @@
 # Eccomerce
-Welcome to our cutting-edge eCommerce platform, powered by Laravel – a robust and versatile PHP framework. Our eCommerce project seamlessly blends the power of Laravel's elegant syntax with advanced features to provide users with a smooth, secure, and delightful online shopping experience.
-
 
 ## Commands
 * setup
@@ -21,7 +19,3 @@ $ php artisan serve --host=<hostname> --port=<portname>
 $ npm run dev
 $ npm run watch
 ```
-
-### LOOKS
-
- <img src="./screens/"/>
