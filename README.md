@@ -24,4 +24,4 @@ $ npm run watch
 
 ### LOOKS
 
- <img src=""/>
+ <img src="./screens/"/>
